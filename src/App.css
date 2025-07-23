@@ -7,43 +7,53 @@
 }
 
 header {
-  background: linear-gradient(90deg, #2563eb 0%, #1e40af 100%);
+  background: rgba(37,99,235,0.92);
   color: #fff;
   box-shadow: 0 2px 12px #2563eb22;
   border-bottom: none;
   border-radius: 0 0 1.5rem 1.5rem;
-  padding: 1.5rem 2rem;
-  min-height: 72px;
+  padding: 2rem 2.5rem;
+  min-height: 80px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  backdrop-filter: blur(8px);
+  transition: background 0.2s;
 }
 header .font-extrabold {
   color: #fff;
   letter-spacing: 1.5px;
   text-shadow: 0 2px 8px #1e40af33;
-  font-size: 2rem;
+  font-size: 2.2rem;
   line-height: 1.2;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 350px;
+  max-width: 400px;
 }
 header .flex.items-center {
   gap: 1rem;
 }
 header .space-x-4 {
-  gap: 1.5rem;
+  gap: 2rem;
   display: flex;
+  flex-wrap: wrap;
 }
 header button, header a {
   background: transparent;
   color: #fff;
   font-weight: 600;
-  border-radius: 0.5rem;
-  padding: 0.5rem 1.25rem;
+  border-radius: 0.7rem;
+  padding: 0.7rem 1.5rem;
   transition: background 0.2s, color 0.2s;
-  font-size: 1rem;
+  font-size: 1.08rem;
   line-height: 1.2;
   text-decoration: none;
   white-space: nowrap;
+  margin-bottom: 0.25rem;
+  box-shadow: 0 1px 4px #2563eb11;
 }
 header button:hover, header button.underline, header a:hover, header a.underline {
   background: #1e40af33;
@@ -53,26 +63,29 @@ header button:hover, header button.underline, header a:hover, header a.underline
 
 /* Sidebar */
 .sidebar {
-  background: linear-gradient(120deg, #e0e7ef 0%, #f0f4f8 100%);
+  background: rgba(240,244,248,0.92);
   min-width: 240px;
   max-width: 300px;
-  box-shadow: 2px 0 16px #64748b11;
+  box-shadow: 2px 0 24px #64748b11;
   border-radius: 0 1.5rem 1.5rem 0;
-  padding: 2rem 1.5rem;
+  padding: 2.5rem 2rem;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 1.5rem;
+  gap: 2rem;
+  backdrop-filter: blur(8px);
+  border: 1.5px solid #e0e7ef;
+  transition: background 0.2s;
 }
 .sidebar .font-bold {
-  font-size: 1.3rem;
+  font-size: 1.4rem;
   color: #2563eb;
-  margin-bottom: 2rem;
+  margin-bottom: 2.2rem;
   line-height: 1.2;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 200px;
+  max-width: 220px;
 }
 .sidebar button {
   width: 100%;
@@ -80,22 +93,24 @@ header button:hover, header button.underline, header a:hover, header a.underline
   background: none;
   color: #1e293b;
   font-weight: 500;
-  margin-bottom: 0.5rem;
-  border-radius: 0.5rem;
-  padding: 0.5rem 1rem;
+  margin-bottom: 0.7rem;
+  border-radius: 0.7rem;
+  padding: 0.7rem 1.2rem;
   transition: background 0.2s, color 0.2s;
-  font-size: 1rem;
+  font-size: 1.08rem;
   line-height: 1.2;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  margin-bottom: 0.7rem;
+  box-shadow: 0 1px 4px #2563eb11;
 }
 .sidebar button:hover, .sidebar button.active {
   background: #2563eb22;
   color: #2563eb;
 }
 .sidebar .settings-btn {
-  margin-top: 2rem;
+  margin-top: 2.2rem;
   background: #f1f5f9;
   color: #64748b;
   font-weight: 600;
@@ -109,51 +124,58 @@ header button:hover, header button.underline, header a:hover, header a.underline
 main {
   background: transparent;
   border-radius: 1.5rem;
-  margin: 2rem 0;
+  margin: 2.5rem 0;
   box-shadow: none;
-  font-size: 1.08rem;
+  font-size: 1.12rem;
   line-height: 1.7;
   word-break: break-word;
+  min-width: 0;
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 /* Footer */
 footer {
-  background: #f1f5f9;
+  background: rgba(241,245,249,0.92);
   color: #64748b;
   border-radius: 1.5rem 1.5rem 0 0;
   box-shadow: 0 -2px 12px #64748b11;
-  margin-top: 2rem;
-  font-size: 0.95rem;
+  margin-top: 2.5rem;
+  font-size: 1rem;
   line-height: 1.5;
-  padding: 1.2rem 0;
+  padding: 1.5rem 0;
   word-break: break-word;
+  backdrop-filter: blur(8px);
+  border: 1.5px solid #e0e7ef;
 }
 
 /* Responsive */
-@media (max-width: 900px) {
-  .sidebar {
-    min-width: 180px;
-    padding: 1rem 0.5rem;
-    max-width: 180px;
-  }
-  main {
-    margin: 1rem 0;
-  }
+@media (max-width: 1100px) {
   header .font-extrabold {
-    font-size: 1.2rem;
+    font-size: 1.3rem;
     max-width: 180px;
+  }
+  .sidebar {
+    min-width: 160px;
+    max-width: 160px;
+    padding: 1.2rem 0.7rem;
   }
 }
-@media (max-width: 600px) {
-  .sidebar {
-    display: none;
-  }
+@media (max-width: 700px) {
   header, footer {
     border-radius: 0;
     padding: 1rem 0.5rem;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
   }
   main {
     padding: 0.5rem;
     font-size: 1rem;
+    max-width: 100vw;
+  }
+  .sidebar {
+    display: none;
   }
 }
