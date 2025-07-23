@@ -9,7 +9,7 @@ interface SidebarProps {
 }
 
 const Sidebar: React.FunctionComponent<SidebarProps> = ({ resources, currentView, onSelectResource, onSettings }) => (
-  <aside className="w-64 bg-white border-r h-full p-4 flex flex-col">
+  <aside className="sidebar w-64 h-full p-4 flex flex-col">
     <div className="mb-6 font-bold text-lg">Resources</div>
     <ul className="flex-1 space-y-2">
       {resources.map((res) => (
@@ -24,7 +24,7 @@ const Sidebar: React.FunctionComponent<SidebarProps> = ({ resources, currentView
       ))}
     </ul>
     <button
-      className="mt-6 px-3 py-2 rounded bg-gray-100 hover:bg-gray-200 text-left"
+      className="settings-btn mt-6 px-3 py-2 rounded text-left"
       onClick={onSettings}
     >
       Settings
