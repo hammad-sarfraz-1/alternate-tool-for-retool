@@ -1,0 +1,79 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: "Inter", system-ui, sans-serif;
+  background-color: #f9fafb;
+  color: #222;
+}
+
+.section {
+  margin-bottom: 2rem;
+}
+
+/* Table enhancements */
+table {
+  border-collapse: separate;
+  border-spacing: 0;
+  background: white;
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+th,
+td {
+  transition: background 0.2s;
+}
+th {
+  background: #f3f4f6;
+  font-weight: 600;
+}
+h1 tr:hover td {
+  background: #f1f5f9;
+}
+
+/* Form enhancements */
+input,
+select,
+textarea {
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+}
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px #2563eb22;
+}
+
+/* Modal enhancements */
+.modal-fade-enter {
+  opacity: 0;
+  transform: scale(0.98);
+}
+.modal-fade-enter-active {
+  opacity: 1;
+  transform: scale(1);
+  transition:
+    opacity 0.2s,
+    transform 0.2s;
+}
+.modal-fade-exit {
+  opacity: 1;
+  transform: scale(1);
+}
+.modal-fade-exit-active {
+  opacity: 0;
+  transform: scale(0.98);
+  transition:
+    opacity 0.2s,
+    transform 0.2s;
+}
+
+/* Button enhancements */
+button:active {
+  transform: scale(0.97);
+}
+
+/* shadcn/ui customizations can go here */
