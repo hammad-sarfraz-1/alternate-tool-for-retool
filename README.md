@@ -1,3 +1,70 @@
+# Project Setup & Usage Guide
+
+## Setup Instructions (Ubuntu)
+
+Follow these steps to set up and run this project on Ubuntu:
+
+### 1. Install Node.js and npm
+
+If you don't have Node.js and npm installed, run:
+
+```bash
+sudo apt update
+sudo apt install -y nodejs npm
+```
+
+Or, for a more recent version (recommended):
+
+```bash
+curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+sudo apt-get install -y nodejs
+```
+
+### 2. Install Python and pip (for pre-commit)
+
+```bash
+sudo apt install -y python3 python3-pip
+```
+
+### 3. Install pre-commit (for git hooks)
+
+```bash
+pip3 install pre-commit
+```
+
+### 4. Install project dependencies
+
+```bash
+npm install
+```
+
+### 5. Set up pre-commit hooks
+
+```bash
+pre-commit install
+```
+
+### 6. Run the development server
+
+```bash
+npm run dev
+```
+
+### 7. Open the app
+
+Visit [http://localhost:5173](http://localhost:5173) in your browser.
+
+---
+
+**Optional:**
+
+- To run tests: `npm test`
+- To build for production: `npm run build`
+
+If you encounter any issues, make sure you have the required permissions and the latest versions of Node.js, npm, and Python.
+
+---
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
