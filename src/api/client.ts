@@ -1,11 +1,14 @@
-import axios, { AxiosInstance } from 'axios';
+import axios, { AxiosInstance } from "axios";
 
-let apiBaseUrl = '';
+let apiBaseUrl = "";
 let customHeaders: Record<string, string> = {};
 
 let client: AxiosInstance = axios.create();
 
-export function configureClient(baseUrl: string, headers: Record<string, string> = {}) {
+export function configureClient(
+  baseUrl: string,
+  headers: Record<string, string> = {},
+) {
   apiBaseUrl = baseUrl;
   customHeaders = headers;
   client = axios.create({

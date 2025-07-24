@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 interface ModalProps {
   open: boolean;
@@ -7,7 +7,12 @@ interface ModalProps {
   children: React.ReactNode;
 }
 
-const Modal: React.FunctionComponent<ModalProps> = ({ open, onClose, title, children }) => {
+const Modal: React.FunctionComponent<ModalProps> = ({
+  open,
+  onClose,
+  title,
+  children,
+}) => {
   if (!open) return null;
   return (
     <div className="modal">
@@ -19,7 +24,11 @@ const Modal: React.FunctionComponent<ModalProps> = ({ open, onClose, title, chil
         >
           &times;
         </button>
-        {title && <h2 className="text-lg font-semibold mb-4 text-blue-700 drop-shadow">{title}</h2>}
+        {title && (
+          <h2 className="text-lg font-semibold mb-4 text-blue-700 drop-shadow">
+            {title}
+          </h2>
+        )}
         {children}
       </div>
     </div>

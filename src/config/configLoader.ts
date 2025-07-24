@@ -1,6 +1,6 @@
-import { AppConfig } from './types';
+import { AppConfig } from "./types";
 
-const LOCAL_STORAGE_KEY = 'crud_ui_app_config';
+const LOCAL_STORAGE_KEY = "crud_ui_app_config";
 
 export function loadConfig(): AppConfig | null {
   const raw = localStorage.getItem(LOCAL_STORAGE_KEY);

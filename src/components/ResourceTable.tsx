@@ -1,5 +1,5 @@
-import React from 'react';
-import { ResourceConfig } from '../config/types';
+import React from "react";
+import { ResourceConfig } from "../config/types";
 
 interface ResourceTableProps {
   resource: ResourceConfig;
@@ -8,24 +8,43 @@ interface ResourceTableProps {
   onDelete: (id: any) => void;
 }
 
-const ResourceTable: React.FunctionComponent<ResourceTableProps> = ({ resource, records, onEdit, onDelete }) => {
+const ResourceTable: React.FunctionComponent<ResourceTableProps> = ({
+  resource,
+  records,
+  onEdit,
+  onDelete,
+}) => {
   return (
     <div className="border rounded-xl p-6 bg-white/80 shadow-glam">
-      <h3 className="font-bold mb-4 text-blue-800 text-xl drop-shadow">{resource.label || resource.name} Table</h3>
+      <h3 className="font-bold mb-4 text-blue-800 text-xl drop-shadow">
+        {resource.label || resource.name} Table
+      </h3>
       <table className="min-w-full text-sm rounded-xl overflow-hidden">
         <thead>
           <tr>
             {resource.fields.map((field) => (
-              <th key={field.name} className="px-4 py-2 border-b text-left bg-blue-50 text-blue-900 font-semibold">{field.label || field.name}</th>
+              <th
+                key={field.name}
+                className="px-4 py-2 border-b text-left bg-blue-50 text-blue-900 font-semibold"
+              >
+                {field.label || field.name}
+              </th>
             ))}
-            <th className="px-4 py-2 border-b bg-blue-50 text-blue-900 font-semibold">Actions</th>
+            <th className="px-4 py-2 border-b bg-blue-50 text-blue-900 font-semibold">
+              Actions
+            </th>
           </tr>
         </thead>
         <tbody>
           {records.length === 0 ? (
             <tr>
               {resource.fields.map((field) => (
-                <td key={field.name} className="px-4 py-2 border-b text-gray-400">-</td>
+                <td
+                  key={field.name}
+                  className="px-4 py-2 border-b text-gray-400"
+                >
+                  -
+                </td>
               ))}
               <td className="px-4 py-2 border-b text-gray-400">-</td>
             </tr>
@@ -34,7 +53,9 @@ const ResourceTable: React.FunctionComponent<ResourceTableProps> = ({ resource, 
               <tr key={idx} className="hover:bg-blue-50 transition">
                 {resource.fields.map((field) => (
                   <td key={field.name} className="px-4 py-2 border-b">
-                    {record[field.name] ?? <span className="text-gray-400">-</span>}
+                    {record[field.name] ?? (
+                      <span className="text-gray-400">-</span>
+                    )}
                   </td>
                 ))}
                 <td className="px-4 py-2 border-b space-x-2">

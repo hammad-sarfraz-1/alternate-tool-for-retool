@@ -1,6 +1,6 @@
-import { useMutation, useQueryClient } from 'react-query';
-import { ResourceConfig } from '../config/types';
-import { createResource } from '../api/resourceApi';
+import { useMutation, useQueryClient } from "react-query";
+import { ResourceConfig } from "../config/types";
+import { createResource } from "../api/resourceApi";
 
 export function useResourceCreate<T>(resource: ResourceConfig) {
   const queryClient = useQueryClient();

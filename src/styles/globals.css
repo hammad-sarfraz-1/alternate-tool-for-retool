@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 body {
-  font-family: 'Inter', system-ui, sans-serif;
+  font-family: "Inter", system-ui, sans-serif;
   background-color: #f9fafb;
   color: #222;
 }
@@ -20,22 +20,29 @@ table {
   border-radius: 0.5rem;
   overflow: hidden;
 }
-th, td {
+th,
+td {
   transition: background 0.2s;
 }
 th {
   background: #f3f4f6;
   font-weight: 600;
-}h1
-tr:hover td {
+}
+h1 tr:hover td {
   background: #f1f5f9;
 }
 
 /* Form enhancements */
-input, select, textarea {
-  transition: border-color 0.2s, box-shadow 0.2s;
+input,
+select,
+textarea {
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
 }
-input:focus, select:focus, textarea:focus {
+input:focus,
+select:focus,
+textarea:focus {
   border-color: #2563eb;
   box-shadow: 0 0 0 2px #2563eb22;
 }
@@ -48,7 +55,9 @@ input:focus, select:focus, textarea:focus {
 .modal-fade-enter-active {
   opacity: 1;
   transform: scale(1);
-  transition: opacity 0.2s, transform 0.2s;
+  transition:
+    opacity 0.2s,
+    transform 0.2s;
 }
 .modal-fade-exit {
   opacity: 1;
@@ -57,7 +66,9 @@ input:focus, select:focus, textarea:focus {
 .modal-fade-exit-active {
   opacity: 0;
   transform: scale(0.98);
-  transition: opacity 0.2s, transform 0.2s;
+  transition:
+    opacity 0.2s,
+    transform 0.2s;
 }
 
 /* Button enhancements */

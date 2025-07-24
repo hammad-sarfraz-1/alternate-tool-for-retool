@@ -7,7 +7,7 @@
 }
 
 header {
-  background: rgba(37,99,235,0.92);
+  background: rgba(37, 99, 235, 0.92);
   color: #fff;
   box-shadow: 0 2px 12px #2563eb22;
   border-bottom: none;
@@ -41,13 +41,16 @@ header .space-x-4 {
   display: flex;
   flex-wrap: wrap;
 }
-header button, header a {
+header button,
+header a {
   background: transparent;
   color: #fff;
   font-weight: 600;
   border-radius: 0.7rem;
   padding: 0.7rem 1.5rem;
-  transition: background 0.2s, color 0.2s;
+  transition:
+    background 0.2s,
+    color 0.2s;
   font-size: 1.08rem;
   line-height: 1.2;
   text-decoration: none;
@@ -55,7 +58,10 @@ header button, header a {
   margin-bottom: 0.25rem;
   box-shadow: 0 1px 4px #2563eb11;
 }
-header button:hover, header button.underline, header a:hover, header a.underline {
+header button:hover,
+header button.underline,
+header a:hover,
+header a.underline {
   background: #1e40af33;
   color: #fff;
   text-decoration: underline;
@@ -63,7 +69,7 @@ header button:hover, header button.underline, header a:hover, header a.underline
 
 /* Sidebar */
 .sidebar {
-  background: rgba(240,244,248,0.92);
+  background: rgba(240, 244, 248, 0.92);
   min-width: 240px;
   max-width: 300px;
   box-shadow: 2px 0 24px #64748b11;
@@ -96,7 +102,9 @@ header button:hover, header button.underline, header a:hover, header a.underline
   margin-bottom: 0.7rem;
   border-radius: 0.7rem;
   padding: 0.7rem 1.2rem;
-  transition: background 0.2s, color 0.2s;
+  transition:
+    background 0.2s,
+    color 0.2s;
   font-size: 1.08rem;
   line-height: 1.2;
   white-space: nowrap;
@@ -105,7 +113,8 @@ header button:hover, header button.underline, header a:hover, header a.underline
   margin-bottom: 0.7rem;
   box-shadow: 0 1px 4px #2563eb11;
 }
-.sidebar button:hover, .sidebar button.active {
+.sidebar button:hover,
+.sidebar button.active {
   background: #2563eb22;
   color: #2563eb;
 }
@@ -137,7 +146,7 @@ main {
 
 /* Footer */
 footer {
-  background: rgba(241,245,249,0.92);
+  background: rgba(241, 245, 249, 0.92);
   color: #64748b;
   border-radius: 1.5rem 1.5rem 0 0;
   box-shadow: 0 -2px 12px #64748b11;
@@ -163,7 +172,8 @@ footer {
   }
 }
 @media (max-width: 700px) {
-  header, footer {
+  header,
+  footer {
     border-radius: 0;
     padding: 1rem 0.5rem;
     flex-direction: column;

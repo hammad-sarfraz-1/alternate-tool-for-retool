@@ -1,6 +1,12 @@
 // Resource and field configuration types for CRUD UI generator
 
-export type FieldType = 'string' | 'number' | 'boolean' | 'date' | 'enum' | 'custom';
+export type FieldType =
+  | "string"
+  | "number"
+  | "boolean"
+  | "date"
+  | "enum"
+  | "custom";
 
 export interface FieldConfig {
   name: string;
@@ -25,10 +31,10 @@ export interface FieldConfig {
 }
 
 export interface EndpointPattern {
-  list: string;    // e.g. '/users'
-  create: string;  // e.g. '/users'
-  update: string;  // e.g. '/users/:id'
-  delete: string;  // e.g. '/users/:id'
+  list: string; // e.g. '/users'
+  create: string; // e.g. '/users'
+  update: string; // e.g. '/users/:id'
+  delete: string; // e.g. '/users/:id'
 }
 
 export interface ResourceConfig {

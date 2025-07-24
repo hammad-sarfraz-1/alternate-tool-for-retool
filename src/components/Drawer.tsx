@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 interface DrawerProps {
   open: boolean;
@@ -7,7 +7,12 @@ interface DrawerProps {
   children: React.ReactNode;
 }
 
-const Drawer: React.FunctionComponent<DrawerProps> = ({ open, onClose, title, children }) => {
+const Drawer: React.FunctionComponent<DrawerProps> = ({
+  open,
+  onClose,
+  title,
+  children,
+}) => {
   if (!open) return null;
   return (
     <div className="fixed inset-0 z-50 flex">

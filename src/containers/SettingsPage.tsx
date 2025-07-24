@@ -1,5 +1,5 @@
-import React from 'react';
-import { useSettings } from '../hooks/useSettings';
+import React from "react";
+import { useSettings } from "../hooks/useSettings";
 
 const SettingsPage: React.FunctionComponent = () => {
   const [settings] = useSettings();
@@ -18,7 +18,9 @@ const SettingsPage: React.FunctionComponent = () => {
           />
         </div>
         <div>
-          <label className="block text-sm font-medium mb-1">Headers (JSON)</label>
+          <label className="block text-sm font-medium mb-1">
+            Headers (JSON)
+          </label>
           <textarea
             className="border px-2 py-1 rounded w-full"
             value={JSON.stringify(settings.headers, null, 2)}

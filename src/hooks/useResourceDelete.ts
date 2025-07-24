@@ -1,6 +1,6 @@
-import { useMutation, useQueryClient } from 'react-query';
-import { ResourceConfig } from '../config/types';
-import { deleteResource } from '../api/resourceApi';
+import { useMutation, useQueryClient } from "react-query";
+import { ResourceConfig } from "../config/types";
+import { deleteResource } from "../api/resourceApi";
 
 export function useResourceDelete(resource: ResourceConfig) {
   const queryClient = useQueryClient();

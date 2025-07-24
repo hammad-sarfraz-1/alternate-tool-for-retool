@@ -1,12 +1,12 @@
-import { useState, useEffect } from 'react';
-import { loadConfig, saveConfig } from '../config/configLoader';
-import { configureClient } from '../api/client';
-import defaultConfig from '../config/defaultConfig';
+import { useState, useEffect } from "react";
+import { loadConfig, saveConfig } from "../config/configLoader";
+import { configureClient } from "../api/client";
+import defaultConfig from "../config/defaultConfig";
 
 export function useSettings() {
   const [settings, setSettings] = useState(() => {
     const config = loadConfig() || defaultConfig;
-    return config.settings || { apiBaseUrl: '', headers: {} };
+    return config.settings || { apiBaseUrl: "", headers: {} };
   });
 
   useEffect(() => {
