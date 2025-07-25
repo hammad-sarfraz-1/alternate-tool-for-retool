@@ -54,6 +54,7 @@ const ModuleEntityPage: React.FC = () => {
   const [apiData, setApiData] = useState<any>(null);
   const [apiLoading, setApiLoading] = useState(false);
   const [apiError, setApiError] = useState<string | null>(null);
+  const [sidebarOpen, setSidebarOpen] = useState(true);
 
   // Pagination state for table
   // Remove rowPage, colPage, ROWS_PER_PAGE, COLS_PER_PAGE, and all pagination logic
@@ -71,6 +72,31 @@ const ModuleEntityPage: React.FC = () => {
         .then((res) => {
           setApiData(res.data);
           setApiLoading(false);
+          // Sync fields with API data keys (flattened)
+          let keys: string[] = [];
+          if (Array.isArray(res.data) && res.data.length > 0) {
+            const flat = flattenRow(res.data[0]);
+            keys = Object.keys(flat);
+          } else if (typeof res.data === "object" && res.data !== null) {
+            const flat = flattenRow(res.data);
+            keys = Object.keys(flat);
+          }
+          if (keys.length > 0) {
+            // Only add new fields, don't remove existing
+            setFields((prevFields) => {
+              const existingNames = prevFields.map((f) => f.name);
+              const newFields = keys
+                .filter((k) => !existingNames.includes(k))
+                .map((k) => ({ name: k, type: "text" }));
+              if (newFields.length > 0) {
+                const updated = [...prevFields, ...newFields];
+                if (appId && moduleId)
+                  appsState.updateModuleFields(appId, moduleId, updated);
+                return updated;
+              }
+              return prevFields;
+            });
+          }
         })
         .catch((err) => {
           setApiError(err?.message || "Failed to fetch module data");
@@ -245,18 +271,20 @@ const ModuleEntityPage: React.FC = () => {
     >
       <div>
         <h2 className="text-xl font-bold mb-4">Field Manager</h2>
-        <label className="block text-sm font-medium mb-2">Select Module</label>
-        <select
-          className="w-full border rounded px-3 py-2 mb-4"
-          value={selectedModuleId}
-          onChange={handleModuleChange}
-        >
+        <div className="flex space-x-2 overflow-x-auto mb-4 pb-2 border-b">
           {app.modules.map((m) => (
-            <option key={m.id} value={m.id}>
+            <button
+              key={m.id}
+              className={`px-4 py-2 rounded-t font-semibold focus:outline-none transition-colors whitespace-nowrap ${selectedModuleId === m.id ? "bg-blue-600 text-white" : "bg-gray-200 text-gray-700 hover:bg-blue-100"}`}
+              onClick={() => {
+                setSelectedModuleId(m.id);
+                if (m.id !== moduleId) navigate(`/app/${appId}/module/${m.id}`);
+              }}
+            >
               {m.name}
-            </option>
+            </button>
           ))}
-        </select>
+        </div>
         <div className="flex gap-2 mb-4">
           <input
             className="border rounded px-3 py-2 flex-1"
@@ -344,11 +372,134 @@ const ModuleEntityPage: React.FC = () => {
 
   // Main content: Add/Edit Entity form and Table
   return (
-    <div className="flex min-h-screen bg-gray-50">
+    <div className="relative min-h-screen bg-gray-50">
+      {/* Sidebar toggle button (show when sidebar is hidden) */}
+      {!sidebarOpen && (
+        <button
+          className="fixed top-4 left-4 z-50 bg-blue-600 text-white px-3 py-2 rounded shadow-lg hover:bg-blue-700 transition"
+          onClick={() => setSidebarOpen(true)}
+          aria-label="Show Field Manager"
+        >
+          Show Field Manager
+        </button>
+      )}
       {/* Sidebar */}
-      {renderSidebar()}
+      <aside
+        className={`fixed top-0 left-0 h-full z-40 transition-transform duration-300 bg-white shadow-lg border-r w-96 min-w-[22rem] max-w-xs p-6 flex flex-col gap-6 overflow-y-auto ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}`}
+        style={{ willChange: "transform" }}
+      >
+        <button
+          className="absolute top-4 right-4 bg-gray-200 text-gray-700 px-2 py-1 rounded hover:bg-gray-300 transition"
+          onClick={() => setSidebarOpen(false)}
+          aria-label="Hide Field Manager"
+        >
+          ✕
+        </button>
+        <div>
+          <h2 className="text-xl font-bold mb-4">Field Manager</h2>
+          <div className="flex space-x-2 overflow-x-auto mb-4 pb-2 border-b">
+            {app.modules.map((m) => (
+              <button
+                key={m.id}
+                className={`px-4 py-2 rounded-t font-semibold focus:outline-none transition-colors whitespace-nowrap ${selectedModuleId === m.id ? "bg-blue-600 text-white" : "bg-gray-200 text-gray-700 hover:bg-blue-100"}`}
+                onClick={() => {
+                  setSelectedModuleId(m.id);
+                  if (m.id !== moduleId)
+                    navigate(`/app/${appId}/module/${m.id}`);
+                }}
+              >
+                {m.name}
+              </button>
+            ))}
+          </div>
+          <div className="flex gap-2 mb-4">
+            <input
+              className="border rounded px-3 py-2 flex-1"
+              placeholder="Field Name"
+              value={editingFieldIdx !== null ? editField.name : newField.name}
+              onChange={(e) => {
+                if (editingFieldIdx !== null)
+                  setEditField((f) => ({ ...f, name: e.target.value }));
+                else setNewField((f) => ({ ...f, name: e.target.value }));
+              }}
+            />
+            <select
+              className="border rounded px-3 py-2"
+              value={editingFieldIdx !== null ? editField.type : newField.type}
+              onChange={(e) => {
+                if (editingFieldIdx !== null)
+                  setEditField((f) => ({ ...f, type: e.target.value }));
+                else setNewField((f) => ({ ...f, type: e.target.value }));
+              }}
+            >
+              {fieldTypes.map((ft) => (
+                <option key={ft.value} value={ft.value}>
+                  {ft.label}
+                </option>
+              ))}
+            </select>
+            {editingFieldIdx !== null ? (
+              <>
+                <button
+                  className="bg-green-600 text-white px-3 py-2 rounded font-semibold"
+                  onClick={() => handleSaveField(editingFieldIdx)}
+                >
+                  Save
+                </button>
+                <button
+                  className="bg-gray-300 text-gray-700 px-3 py-2 rounded font-semibold"
+                  onClick={handleCancelFieldEdit}
+                >
+                  Cancel
+                </button>
+              </>
+            ) : (
+              <button
+                className="bg-blue-600 text-white px-3 py-2 rounded font-semibold"
+                onClick={handleAddField}
+              >
+                Add Field
+              </button>
+            )}
+          </div>
+          <table className="w-full text-sm border rounded overflow-hidden">
+            <thead className="bg-gray-100">
+              <tr>
+                <th className="p-2 border">Field Name</th>
+                <th className="p-2 border">Type</th>
+                <th className="p-2 border">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {fields.map((f, idx) => (
+                <tr key={f.name}>
+                  <td className="p-2 border">{f.name}</td>
+                  <td className="p-2 border">{f.type}</td>
+                  <td className="p-2 border space-x-2">
+                    <button
+                      className="bg-blue-500 text-white px-2 rounded"
+                      onClick={() => handleEditField(idx)}
+                    >
+                      Edit
+                    </button>
+                    <button
+                      className="bg-red-500 text-white px-2 rounded"
+                      onClick={() => handleRemoveField(idx)}
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </aside>
       {/* Main content */}
-      <main className="flex-1 ml-80 max-w-5xl mx-auto py-10 px-4">
+      <main
+        className={`transition-all duration-300 ${sidebarOpen ? "ml-96" : "ml-0"} max-w-6xl mx-auto py-10 px-8`}
+        style={{ minHeight: "100vh" }}
+      >
         <h2 className="text-2xl font-bold mb-6">
           Entities in <span className="text-blue-700">{module.name}</span>
         </h2>
@@ -507,90 +658,51 @@ const ModuleEntityPage: React.FC = () => {
                   }
                 />
               ))}
-              <div className="flex gap-2 ml-auto">
-                {editEntityId ? (
-                  <>
-                    <button
-                      type="submit"
-                      className="bg-green-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-green-700"
-                    >
-                      Save
-                    </button>
-                    <button
-                      type="button"
-                      className="bg-gray-300 text-gray-700 px-4 py-2 rounded-lg font-semibold hover:bg-gray-400"
-                      onClick={handleCancelEdit}
-                    >
-                      Cancel
-                    </button>
-                  </>
-                ) : (
-                  <button
-                    type="submit"
-                    className="bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-blue-700"
-                  >
-                    Add
-                  </button>
-                )}
-              </div>
+              <button
+                type="submit"
+                className="bg-blue-600 text-white px-4 py-2 rounded font-semibold"
+              >
+                {editEntityId ? "Save" : "Add"}
+              </button>
+              {entityError && (
+                <span className="text-red-500 text-xs ml-2">{entityError}</span>
+              )}
             </form>
-            {entityError && (
-              <div className="text-red-500 font-bold text-lg mb-2">
-                {entityError}
-              </div>
-            )}
-            <table className="min-w-full divide-y divide-gray-200 mt-4">
-              <thead>
+            <table className="w-full text-sm border rounded overflow-hidden">
+              <thead className="bg-gray-100">
                 <tr>
                   {fields.map((f) => (
-                    <th
-                      key={f.name}
-                      className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                    >
+                    <th key={f.name} className="p-2 border">
                       {f.name}
                     </th>
                   ))}
-                  <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Actions
-                  </th>
+                  <th className="p-2 border">Actions</th>
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-gray-100">
-                {entities.length === 0 ? (
-                  <tr>
-                    <td
-                      colSpan={fields.length + 1}
-                      className="text-center text-gray-400 py-8"
-                    >
-                      No entities yet.
+              <tbody>
+                {entities.map((e) => (
+                  <tr key={e.id}>
+                    {fields.map((f) => (
+                      <td key={f.name} className="p-2 border">
+                        {e[f.name]}
+                      </td>
+                    ))}
+                    <td className="p-2 border space-x-2">
+                      <button
+                        className="bg-blue-500 text-white px-2 rounded"
+                        onClick={() => handleEditEntity(e)}
+                      >
+                        Edit
+                      </button>
+                      <button
+                        className="bg-red-500 text-white px-2 rounded"
+                        onClick={() => handleDeleteEntity(e.id)}
+                      >
+                        Delete
+                      </button>
                     </td>
                   </tr>
-                ) : (
-                  entities.map((entity) => (
-                    <tr key={entity.id} className="hover:bg-blue-50 transition">
-                      {fields.map((f) => (
-                        <td key={f.name} className="px-4 py-2">
-                          {/* Read-only: show as text, not input */}
-                          {entity[f.name] || ""}
-                        </td>
-                      ))}
-                      <td className="px-4 py-2 flex gap-2">
-                        <button
-                          className="bg-blue-500 text-white px-3 py-1 rounded-lg text-sm font-semibold hover:bg-blue-700"
-                          onClick={() => handleEditEntity(entity)}
-                        >
-                          Edit
-                        </button>
-                        <button
-                          className="bg-red-500 text-white px-3 py-1 rounded-lg text-sm font-semibold hover:bg-red-700"
-                          onClick={() => handleDeleteEntity(entity.id)}
-                        >
-                          Delete
-                        </button>
-                      </td>
-                    </tr>
-                  ))
-                )}
+                ))}
               </tbody>
             </table>
           </div>
