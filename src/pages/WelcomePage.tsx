@@ -4,7 +4,6 @@ import { appsState } from "../data/apps";
 
 const WelcomePage: React.FC = () => {
   const [appName, setAppName] = useState("");
-  const [apiEndpoint, setApiEndpoint] = useState("");
   const [apps, setApps] = useState(appsState.getApps());
   const [editingAppId, setEditingAppId] = useState<string | null>(null);
   const [editAppName, setEditAppName] = useState("");
@@ -16,10 +15,9 @@ const WelcomePage: React.FC = () => {
 
   const handleCreateApp = () => {
     if (!appName.trim()) return;
-    appsState.addApp(appName.trim(), apiEndpoint.trim());
+    appsState.addApp(appName.trim());
     setApps(appsState.getApps());
     setAppName("");
-    setApiEndpoint("");
   };
 
   // Update app name in mock state
@@ -34,6 +32,12 @@ const WelcomePage: React.FC = () => {
 
   // Delete app from mock state
   const handleDeleteApp = (appId: string) => {
+    if (
+      !window.confirm(
+        "Are you sure you want to delete this app? This action cannot be undone.",
+      )
+    )
+      return;
     const idx = appsState.getApps().findIndex((a) => a.id === appId);
     if (idx !== -1) {
       appsState.getApps().splice(idx, 1);
@@ -52,12 +56,6 @@ const WelcomePage: React.FC = () => {
           placeholder="New App Name"
           value={appName}
           onChange={(e) => setAppName(e.target.value)}
-        />
-        <input
-          className="flex-1 border rounded-lg px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
-          placeholder="API Endpoint (optional)"
-          value={apiEndpoint}
-          onChange={(e) => setApiEndpoint(e.target.value)}
         />
         <button
           className="bg-blue-600 text-white px-6 py-2 rounded-lg font-semibold shadow-md hover:bg-blue-700 transition"

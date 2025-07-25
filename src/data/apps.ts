@@ -3,6 +3,7 @@ export type Entity = { id: string; name: string; [key: string]: any };
 export type Module = {
   id: string;
   name: string;
+  apiEndpoint?: string;
   fields?: Field[];
   entities?: Entity[];
   modules?: Module[]; // for nesting
@@ -11,7 +12,6 @@ export type App = {
   id: string;
   name: string;
   modules: Module[];
-  apiEndpoint?: string;
 };
 
 const STORAGE_KEY = "appsState";
@@ -43,18 +43,23 @@ class AppsState {
   getApp(appId: string) {
     return this.apps.find((a) => a.id === appId);
   }
-  addApp(name: string, apiEndpoint?: string): App {
-    const app: App = { id: uuid(), name, modules: [], apiEndpoint };
+  addApp(name: string): App {
+    const app: App = { id: uuid(), name, modules: [] };
     this.apps.push(app);
     saveToStorage(this.apps);
     return app;
   }
-  addModuleToApp(appId: string, moduleName: string): Module | undefined {
+  addModuleToApp(
+    appId: string,
+    moduleName: string,
+    apiEndpoint?: string,
+  ): Module | undefined {
     const app = this.getApp(appId);
     if (!app) return;
     const mod: Module = {
       id: uuid(),
       name: moduleName,
+      apiEndpoint,
       fields: [],
       entities: [],
       modules: [],
@@ -78,7 +83,9 @@ class AppsState {
 }
 
 export const appsState = new AppsState();
-export const addApp = (name: string, apiEndpoint?: string) =>
-  appsState.addApp(name, apiEndpoint);
-export const addModuleToApp = (appId: string, moduleName: string) =>
-  appsState.addModuleToApp(appId, moduleName);
+export const addApp = (name: string) => appsState.addApp(name);
+export const addModuleToApp = (
+  appId: string,
+  moduleName: string,
+  apiEndpoint?: string,
+) => appsState.addModuleToApp(appId, moduleName, apiEndpoint);

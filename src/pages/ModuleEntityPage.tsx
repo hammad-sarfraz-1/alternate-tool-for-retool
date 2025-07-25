@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { appsState, Module, Entity, Field } from "../data/apps";
+import axios from "axios";
 
 const fieldTypes = [
   { label: "Text", value: "text" },
@@ -11,6 +12,28 @@ const fieldTypes = [
 const ID_FIELD = "id";
 
 const SIDEBAR_WIDTH = "w-80";
+
+// Helper to flatten one level of nested objects for table columns
+function flattenRow(row: any, parentKey = "") {
+  let result: Record<string, any> = {};
+  for (const key in row) {
+    const value = row[key];
+    const colKey = parentKey ? `${parentKey}.${key}` : key;
+    if (value && typeof value === "object" && !Array.isArray(value)) {
+      // Only flatten one level
+      for (const subKey in value) {
+        const subVal = value[subKey];
+        if (typeof subVal !== "object" && !Array.isArray(subVal)) {
+          result[`${colKey}.${subKey}`] = subVal;
+        }
+      }
+    } else if (typeof value !== "object" || value === null) {
+      result[colKey] = value;
+    }
+    // Arrays and deeper objects are ignored for columns
+  }
+  return result;
+}
 
 const ModuleEntityPage: React.FC = () => {
   const { appId, moduleId } = useParams<{ appId: string; moduleId: string }>();
@@ -28,11 +51,34 @@ const ModuleEntityPage: React.FC = () => {
   const [selectedModuleId, setSelectedModuleId] = useState(moduleId);
   const [editEntityId, setEditEntityId] = useState<string | null>(null);
   const [entityError, setEntityError] = useState<string | null>(null);
+  const [apiData, setApiData] = useState<any>(null);
+  const [apiLoading, setApiLoading] = useState(false);
+  const [apiError, setApiError] = useState<string | null>(null);
+
+  // Pagination state for table
+  // Remove rowPage, colPage, ROWS_PER_PAGE, COLS_PER_PAGE, and all pagination logic
 
   useEffect(() => {
     setFields(module?.fields || []);
     setEntities(module?.entities || []);
     setSelectedModuleId(moduleId);
+    // Fetch from module API endpoint if present
+    if (module?.apiEndpoint) {
+      setApiLoading(true);
+      setApiError(null);
+      axios
+        .get(module.apiEndpoint)
+        .then((res) => {
+          setApiData(res.data);
+          setApiLoading(false);
+        })
+        .catch((err) => {
+          setApiError(err?.message || "Failed to fetch module data");
+          setApiLoading(false);
+        });
+    } else {
+      setApiData(null);
+    }
   }, [moduleId, appId]);
 
   // Persist fields/entities
@@ -306,6 +352,132 @@ const ModuleEntityPage: React.FC = () => {
         <h2 className="text-2xl font-bold mb-6">
           Entities in <span className="text-blue-700">{module.name}</span>
         </h2>
+        {/* Show fetched API data if available */}
+        {module?.apiEndpoint && (
+          <div className="mb-6">
+            <h3 className="text-lg font-bold mb-2">Module API Data</h3>
+            {apiLoading ? (
+              <div className="text-blue-500">Loading data from API...</div>
+            ) : apiError ? (
+              <div className="text-red-500">{apiError}</div>
+            ) : apiData ? (
+              Array.isArray(apiData) ? (
+                (() => {
+                  const flatRows = apiData.map((row) => flattenRow(row));
+                  const allKeys = Array.from(
+                    new Set(flatRows.flatMap((row) => Object.keys(row))),
+                  );
+                  return (
+                    <div
+                      className="block max-w-full overflow-x-auto"
+                      style={{ maxHeight: "24rem", overflowY: "auto" }}
+                    >
+                      <table className="w-max divide-y divide-gray-200 bg-white rounded shadow">
+                        <thead>
+                          <tr>
+                            {allKeys.map((key) => (
+                              <th
+                                key={key}
+                                className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                style={{
+                                  writingMode: "horizontal-tb",
+                                  wordBreak: "normal",
+                                  minWidth: 120,
+                                }}
+                              >
+                                {key}
+                              </th>
+                            ))}
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {flatRows.map((row, idx) => (
+                            <tr
+                              key={row.id || idx}
+                              className="hover:bg-blue-50 transition"
+                            >
+                              {allKeys.map((key) => (
+                                <td
+                                  key={key}
+                                  className="px-4 py-2 text-xs text-left align-top"
+                                  style={{
+                                    writingMode: "horizontal-tb",
+                                    wordBreak: "normal",
+                                    minWidth: 120,
+                                  }}
+                                >
+                                  {row[key] !== undefined
+                                    ? String(row[key])
+                                    : ""}
+                                </td>
+                              ))}
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  );
+                })()
+              ) : typeof apiData === "object" ? (
+                (() => {
+                  const flatRow = flattenRow(apiData);
+                  const allKeys = Object.keys(flatRow);
+                  return (
+                    <div
+                      className="block max-w-full overflow-x-auto"
+                      style={{ maxHeight: "24rem", overflowY: "auto" }}
+                    >
+                      <table className="w-max divide-y divide-gray-200 bg-white rounded shadow">
+                        <thead>
+                          <tr>
+                            {allKeys.map((key) => (
+                              <th
+                                key={key}
+                                className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                style={{
+                                  writingMode: "horizontal-tb",
+                                  wordBreak: "normal",
+                                  minWidth: 120,
+                                }}
+                              >
+                                {key}
+                              </th>
+                            ))}
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            {allKeys.map((key) => (
+                              <td
+                                key={key}
+                                className="px-4 py-2 text-xs text-left align-top"
+                                style={{
+                                  writingMode: "horizontal-tb",
+                                  wordBreak: "normal",
+                                  minWidth: 120,
+                                }}
+                              >
+                                {flatRow[key] !== undefined
+                                  ? String(flatRow[key])
+                                  : ""}
+                              </td>
+                            ))}
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  );
+                })()
+              ) : (
+                <pre className="bg-gray-100 rounded p-4 text-xs overflow-x-auto whitespace-pre-wrap">
+                  {JSON.stringify(apiData, null, 2)}
+                </pre>
+              )
+            ) : (
+              <div className="text-gray-400">No data fetched.</div>
+            )}
+          </div>
+        )}
         {fields.length > 0 && (
           <div className="mb-8 bg-white rounded-xl shadow p-6">
             <h4 className="font-semibold mb-2">Add New Entity</h4>

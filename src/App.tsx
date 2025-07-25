@@ -16,6 +16,7 @@ import "./App.css";
 import WelcomePage from "./pages/WelcomePage";
 import AppModulesPage from "./pages/AppModulesPage";
 import ModuleEntityPage from "./pages/ModuleEntityPage";
+import DataTable from "./components/DataTable";
 
 const resourceRoutes = [
   { name: "levels", label: "Levels" },
